@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 export class PersonComponent implements OnInit, OnDestroy {
 
   private personSubscription: Subscription;
-  personList: string[];
+  personList: string[] = [];
 
   constructor(private thePersonService: PersonService) {
   }

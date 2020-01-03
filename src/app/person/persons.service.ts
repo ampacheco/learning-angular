@@ -7,21 +7,22 @@ import { map } from 'rxjs/operators';
 export class PersonService {
 
   personChanged = new Subject<string []>();
-  persons: string [];
+  persons: string [] = [];
   constructor(private httpClient: HttpClient) {}
 
   fetchPersons() {
     this.httpClient.get<any>('api/people')
-      .subscribe( restData => {
-         console.log(restData);
+      .pipe(map( resData => {
+        return resData.results.map(character => character.name);
+      }))
+      .subscribe( transformedData => {
+         this.personChanged.next(transformedData);
       });
   }
-
   addPerson(theName: string) {
     this.persons.push(theName);
     this.personChanged.next(this.persons);
   }
-
   removePerson(theName: string) {
 
     this.persons = this.persons.filter( person => {
@@ -29,5 +30,4 @@ export class PersonService {
     });
     this.personChanged.next(this.persons);
   }
-
 }
